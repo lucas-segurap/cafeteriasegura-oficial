@@ -26,6 +26,7 @@
 
 </head>
 
+
 <body>
 
 <!-- ================================================== -->
@@ -38,7 +39,7 @@
 
         <div class="container">
 
-            <a class="navbar-brand" th:href="@{/}">
+            <a class="navbar-brand" href="/">
                 <span class="navbar-brand-mark">☕</span>
                 Cafeteria Segura
             </a>
@@ -48,15 +49,13 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
 
                     <li class="nav-item">
-                        <a class="nav-link"
-                           href="../index.html">
+                        <a class="nav-link" href="/index.html">
                             Home
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link"
-                           href="./produtos.html">
+                        <a class="nav-link" href="/produtos.html">
                             Produtos
                         </a>
                     </li>
@@ -64,7 +63,7 @@
                     <li class="nav-item">
                         <a class="nav-link active"
                            aria-current="page"
-                           href="./pedidos.html">
+                           href="/pedidos.html">
                             Pedidos
                         </a>
                     </li>
@@ -75,7 +74,7 @@
                         <span class="nav-link">
 
                             Olá,
-                            <strong th:text="${cliente.nome}">
+                            <strong id="nomeCliente">
                                 Cliente
                             </strong>
 
@@ -86,11 +85,8 @@
                     <!-- Logout -->
                     <li class="nav-item">
 
-                        <a class="nav-link"
-                           th:href="@{/logout}">
-
+                        <a class="nav-link" href="/logout">
                             Sair
-
                         </a>
 
                     </li>
@@ -202,175 +198,27 @@
                 </div>
 
 
-                <!-- Nenhum pedido -->
-                <div
-                    th:if="${#lists.isEmpty(pedidos)}"
-                    class="summary-empty">
+                <!-- Lista preenchida pelo JavaScript -->
 
-                    <span>
-                        ☕
-                    </span>
+                <div id="listaMeusPedidos"
+                     class="lista-meus-pedidos">
 
-                    <p>
-                        Você ainda não realizou nenhum pedido.
-                    </p>
+                    <div class="summary-empty">
 
-                    <small>
-                        Escolha seus produtos abaixo para fazer
-                        seu primeiro pedido.
-                    </small>
+                        <span>
+                            ☕
+                        </span>
 
-                </div>
+                        <p>
+                            Você ainda não realizou nenhum pedido.
+                        </p>
 
+                        <small>
+                            Escolha seus produtos abaixo para fazer
+                            seu primeiro pedido.
+                        </small>
 
-                <!-- Lista de pedidos -->
-                <div
-                    th:unless="${#lists.isEmpty(pedidos)}"
-                    class="lista-meus-pedidos">
-
-                    <article
-                        class="pedido-anterior"
-                        th:each="pedido : ${pedidos}">
-
-                        <!-- Cabeçalho do pedido -->
-                        <div class="pedido-anterior-cabecalho">
-
-                            <div>
-
-                                <strong>
-
-                                    Pedido #
-
-                                    <span th:text="${pedido.id}">
-                                        1
-                                    </span>
-
-                                </strong>
-
-                                <small
-                                    th:text="${#temporals.format(pedido.data, 'dd/MM/yyyy HH:mm')}">
-
-                                    01/10/2026 12:00
-
-                                </small>
-
-                            </div>
-
-                            <strong
-                                th:text="${'R$ ' + #numbers.formatDecimal(pedido.total, 1, 2).replace('.', ',')}">
-
-                                R$ 0,00
-
-                            </strong>
-
-                        </div>
-
-
-                        <!-- Status -->
-                        <div class="pedido-anterior-info">
-
-                            <span>
-                                Status:
-                            </span>
-
-                            <strong
-                                th:text="${pedido.status}">
-
-                                RECEBIDO
-
-                            </strong>
-
-                        </div>
-
-
-                        <!-- Tipo de atendimento -->
-                        <div class="pedido-anterior-info">
-
-                            <span>
-                                Atendimento:
-                            </span>
-
-                            <strong
-                                th:text="${pedido.tipoAtendimento}">
-
-                                BALCAO
-
-                            </strong>
-
-                        </div>
-
-
-                        <!-- Mesa -->
-                        <div
-                            class="pedido-anterior-info"
-                            th:if="${pedido.numeroMesa != null}">
-
-                            <span>
-                                Mesa:
-                            </span>
-
-                            <strong
-                                th:text="${pedido.numeroMesa}">
-
-                                1
-
-                            </strong>
-
-                        </div>
-
-
-                        <!-- Endereço -->
-                        <div
-                            class="pedido-anterior-info"
-                            th:if="${pedido.enderecoEntrega != null}">
-
-                            <span>
-                                Entrega:
-                            </span>
-
-                            <strong
-                                th:text="${pedido.enderecoEntrega}">
-
-                                Endereço
-
-                            </strong>
-
-                        </div>
-
-
-                        <!-- Itens -->
-                        <div class="pedido-anterior-itens">
-
-                            <strong>
-                                Itens:
-                            </strong>
-
-                            <ul>
-
-                                <li
-                                    th:each="item : ${pedido.itens}">
-
-                                    <span
-                                        th:text="${item.quantidade + 'x ' + item.produto.nome}">
-
-                                        1x Café
-
-                                    </span>
-
-                                    <span
-                                        th:text="${'R$ ' + #numbers.formatDecimal(item.preco * item.quantidade, 1, 2).replace('.', ',')}">
-
-                                        R$ 8,90
-
-                                    </span>
-
-                                </li>
-
-                            </ul>
-
-                        </div>
-
-                    </article>
+                    </div>
 
                 </div>
 
@@ -398,7 +246,7 @@
 
                 <form
                     id="formPedido"
-                    th:action="@{/pedidos}"
+                    action="/pedidos"
                     method="post"
                     novalidate>
 
@@ -431,71 +279,26 @@
                         </div>
 
 
-                        <div class="produtos-pedido-grid">
+                        <!--
+                            Os produtos serão inseridos
+                            pelo JavaScript.
+                        -->
 
-                            <label
-                                class="produto-checkbox"
-                                th:each="produto : ${produtos}"
-                                th:for="${'produto-' + produto.id}">
+                        <div
+                            id="produtosPedido"
+                            class="produtos-pedido-grid">
 
+                            <div class="summary-empty">
 
-                                <input
-                                    type="checkbox"
-                                    class="produto-selecao"
-                                    name="produtos"
-                                    th:id="${'produto-' + produto.id}"
-                                    th:value="${produto.id}"
-                                    th:attr="
-                                        data-nome=${produto.nome},
-                                        data-preco=${produto.preco}">
-
-
-                                <span class="checkbox-conteudo">
-
-                                    <strong
-                                        th:text="${produto.nome}">
-
-                                        Nome do produto
-
-                                    </strong>
-
-
-                                    <span
-                                        th:text="${produto.descricao}">
-
-                                        Descrição do produto
-
-                                    </span>
-
-
-                                    <span class="quantidade-controle">
-
-                                        Quantidade
-
-                                        <input
-                                            type="number"
-                                            class="quantidade-produto"
-                                            name="quantidades"
-                                            min="1"
-                                            max="10"
-                                            value="1"
-                                            disabled
-                                            th:attr="
-                                                aria-label=${'Quantidade de ' + produto.nome}">
-
-                                    </span>
-
-
-                                    <b
-                                        th:text="${'R$ ' + #numbers.formatDecimal(produto.preco, 1, 2).replace('.', ',')}">
-
-                                        R$ 0,00
-
-                                    </b>
-
+                                <span>
+                                    ☕
                                 </span>
 
-                            </label>
+                                <p>
+                                    Carregando produtos...
+                                </p>
+
+                            </div>
 
                         </div>
 
@@ -548,7 +351,6 @@
                                     class="form-control"
                                     type="text"
                                     id="nome"
-                                    th:value="${cliente.nome}"
                                     readonly>
 
                             </div>
@@ -570,7 +372,6 @@
                                     class="form-control"
                                     type="tel"
                                     id="telefone"
-                                    th:value="${cliente.telefone}"
                                     readonly>
 
                             </div>
@@ -592,7 +393,6 @@
                                     class="form-control"
                                     type="text"
                                     id="endereco"
-                                    th:value="${cliente.endereco}"
                                     readonly>
 
                             </div>
@@ -683,9 +483,8 @@
                         <!-- MESA -->
                         <!-- ================================================== -->
 
-                        <div
-                            id="campoMesa"
-                            style="display: none;">
+                        <div id="campoMesa"
+                             style="display: none;">
 
                             <label for="numeroMesa">
 
@@ -727,9 +526,8 @@
                         <!-- ENTREGA -->
                         <!-- ================================================== -->
 
-                        <div
-                            id="campoEntrega"
-                            style="display: none;">
+                        <div id="campoEntrega"
+                             style="display: none;">
 
                             <label for="enderecoEntrega">
 
@@ -742,7 +540,6 @@
                                 id="enderecoEntrega"
                                 name="enderecoEntrega"
                                 rows="3"
-                                th:placeholder="${cliente.endereco}"
                                 placeholder="Digite seu endereço completo"></textarea>
 
                         </div>
@@ -756,6 +553,7 @@
 
                     <button
                         class="order-submit"
+                        id="btnConfirmarPedido"
                         type="submit"
                         disabled>
 
@@ -944,22 +742,14 @@
 <!-- ================================================== -->
 
 <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYjR8ZK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous">
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
 </script>
 
+<script src="/js/script.js"></script>
 
-<script th:src="@{/js/script.js}"></script>
-
-<script th:src="@{/js/pedidos.js}"></script>
-
-
-<!-- ================================================== -->
-<!-- CONTROLE DO TIPO DE ATENDIMENTO -->
-<!-- ================================================== -->
-
+<script src="/js/pedidos.js"></script>
 
 
 </body>
+
 </html>

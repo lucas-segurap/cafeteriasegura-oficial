@@ -1,177 +1,218 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description"
-          content="Crie sua conta na Cafeteria Segura">
+    <meta name="description" content="Crie sua conta na Cafeteria Segura">
 
-    <meta name="author"
-          content="Lucas Segura">
+    <meta name="author" content="Lucas Segura">
 
     <title>Cadastro | Cafeteria Segura</title>
 
-    <link rel="stylesheet"
-          th:href="@{/css/style.css}">
-
-    
+    <link rel="stylesheet" href="../static/css/cadastro.css">
+    <link rel="stylesheet" href="../static/css/style.css">
 </head>
 
 <body>
 
-<header>
-    <nav>
-        <a th:href="@{/}">
-            Cafeteria Segura
-        </a>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-dark">
 
-        <a th:href="@{/}">
-            Início
-        </a>
+            <div class="container">
 
-        <a th:href="@{/produtos}">
-            Produtos
-        </a>
+                <a class="navbar-brand" href="./index.html">
+                    <span class="navbar-brand-mark">☕</span>
+                    Cafeteria Segura
+                </a>
 
-        <a th:href="@{/login}">
-            Login
-        </a>
-    </nav>
-</header>
+                <div class="collapse navbar-collapse" id="menuPrincipal">
 
-<main class="cadastro-container">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
 
-    <section class="cadastro-card">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="../index.html">
+                                Home
+                            </a>
+                        </li>
 
-        <h1>Criar conta</h1>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/produtos.html">
+                                Produtos
+                            </a>
+                        </li>
 
-        <p class="cadastro-subtitulo">
-            Cadastre-se para realizar seus pedidos.
-        </p>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pedidos.html">
+                                Pedidos
+                            </a>
+                        </li>
 
-        <!-- Mensagem de erro -->
-        <div
-            class="mensagem-erro"
-            th:if="${erro}"
-            th:text="${erro}">
-            Este e-mail já está cadastrado.
-        </div>
+                    </ul>
 
-        <form
-            th:action="@{/cadastro}"
-            method="post">
-
-            <div class="campo-cadastro">
-
-                <label for="nome">
-                    Nome completo
-                </label>
-
-                <input
-                    type="text"
-                    id="nome"
-                    name="nome"
-                    placeholder="Digite seu nome"
-                    autocomplete="name"
-                    required>
+                </div>
 
             </div>
 
-            <div class="campo-cadastro">
+        </nav>
+    </header>
 
-                <label for="telefone">
-                    Telefone
-                </label>
 
-                <input
-                    type="tel"
-                    id="telefone"
-                    name="telefone"
-                    placeholder="(00) 00000-0000"
-                    autocomplete="tel"
-                    required>
+    <main class="cadastro-container">
 
-            </div>
+        <section class="cadastro-card">
 
-            <div class="campo-cadastro">
+            <h1>Criar conta</h1>
 
-                <label for="endereco">
-                    Endereço
-                </label>
-
-                <textarea
-                    id="endereco"
-                    name="endereco"
-                    placeholder="Digite seu endereço"
-                    autocomplete="street-address"
-                    required></textarea>
-
-            </div>
-
-            <div class="campo-cadastro">
-
-                <label for="email">
-                    E-mail
-                </label>
-
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="Digite seu e-mail"
-                    autocomplete="email"
-                    required>
-
-            </div>
-
-            <div class="campo-cadastro">
-
-                <label for="senha">
-                    Senha
-                </label>
-
-                <input
-                    type="password"
-                    id="senha"
-                    name="senha"
-                    placeholder="Crie uma senha"
-                    autocomplete="new-password"
-                    minlength="6"
-                    required>
-
-            </div>
-
-            <button
-                type="submit"
-                class="btn-cadastro">
-                Criar minha conta
-            </button>
-
-        </form>
-
-        <div class="login-link">
-
-            <p>
-                Já possui uma conta?
+            <p class="cadastro-subtitulo">
+                Cadastre-se para realizar seus pedidos.
             </p>
 
-            <a th:href="@{/login}">
-                Entrar na minha conta
-            </a>
+
+            <!-- Mensagem de erro exibida pelo JavaScript -->
+            <div
+                class="mensagem-erro"
+                id="mensagemErro"
+                style="display: none;">
+            </div>
+
+
+            <!-- Formulário de cadastro -->
+            <form id="formCadastro">
+
+                <div class="campo-cadastro">
+
+                    <label for="nome">
+                        Nome completo
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Digite seu nome"
+                        autocomplete="name"
+                        required>
+
+                </div>
+
+
+                <div class="campo-cadastro">
+
+                    <label for="telefone">
+                        Telefone
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="telefone"
+                        name="telefone"
+                        placeholder="(00) 00000-0000"
+                        autocomplete="tel"
+                        required>
+
+                </div>
+
+
+                <div class="campo-cadastro">
+
+                    <label for="endereco">
+                        Endereço
+                    </label>
+
+                    <textarea
+                        id="endereco"
+                        name="endereco"
+                        placeholder="Digite seu endereço"
+                        autocomplete="street-address"
+                        required></textarea>
+
+                </div>
+
+
+                <div class="campo-cadastro">
+
+                    <label for="email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Digite seu e-mail"
+                        autocomplete="email"
+                        required>
+
+                </div>
+
+
+                <div class="campo-cadastro">
+
+                    <label for="senha">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        placeholder="Crie uma senha"
+                        autocomplete="new-password"
+                        minlength="6"
+                        required>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn-cadastro">
+
+                    Criar minha conta
+
+                </button>
+
+            </form>
+
+
+            <div class="login-link">
+
+                <p>
+                    Já possui uma conta?
+                </p>
+
+                <a href="./login.html">
+                    Entrar na minha conta
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="site-footer">
+
+        <div class="container site-footer-inner">
+
+            <strong>Cafeteria Segura</strong>
+
+            <small>
+                &copy; 2026 Cafeteria Segura.
+                Todos os direitos reservados.
+            </small>
 
         </div>
 
-    </section>
+    </footer>
 
-</main>
 
-<footer>
-    <p>
-        &copy; 2026 Cafeteria Segura. Todos os direitos reservados.
-    </p>
-</footer>
+    <!-- JavaScript do cadastro -->
+    <script src="../static/js/script.js"></script>
 
 </body>
+
 </html>

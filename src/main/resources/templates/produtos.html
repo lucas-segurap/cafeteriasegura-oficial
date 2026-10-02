@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -15,8 +16,11 @@
     <title>Produtos | Cafeteria Segura</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous">
 
     <!-- CSS do projeto -->
     <link rel="stylesheet" href="../static/css/produtos.css">
@@ -44,6 +48,8 @@
                     Cafeteria Segura
 
                 </a>
+
+
                 <!-- MENU -->
 
                 <div class="collapse navbar-collapse" id="menuPrincipal">
@@ -64,7 +70,10 @@
 
                         <li class="nav-item">
 
-                            <a class="nav-link active" aria-current="page" href="./produtos.html">
+                            <a
+                                class="nav-link active"
+                                aria-current="page"
+                                href="./produtos.html">
 
                                 Produtos
 
@@ -155,7 +164,7 @@
 
                 <div class="produtos-contador">
 
-                    <strong th:text="${#lists.size(produtos)}">
+                    <strong id="contadorProdutos">
                         0
                     </strong>
 
@@ -166,12 +175,18 @@
 
                 <!-- FILTROS -->
 
-                <div class="filtros-produtos" aria-label="Filtro de produtos">
+                <div
+                    class="filtros-produtos"
+                    aria-label="Filtro de produtos">
 
 
                     <!-- TODOS -->
 
-                    <button type="button" class="filtro-produto ativo" data-filtro="todos" aria-pressed="true">
+                    <button
+                        type="button"
+                        class="filtro-produto ativo"
+                        data-filtro="todos"
+                        aria-pressed="true">
 
                         Todos
 
@@ -180,7 +195,11 @@
 
                     <!-- BEBIDAS QUENTES -->
 
-                    <button type="button" class="filtro-produto" data-filtro="BEBIDAS_QUENTES" aria-pressed="false">
+                    <button
+                        type="button"
+                        class="filtro-produto"
+                        data-filtro="BEBIDAS_QUENTES"
+                        aria-pressed="false">
 
                         Bebidas quentes
 
@@ -189,7 +208,11 @@
 
                     <!-- BEBIDAS GELADAS -->
 
-                    <button type="button" class="filtro-produto" data-filtro="BEBIDAS_GELADAS" aria-pressed="false">
+                    <button
+                        type="button"
+                        class="filtro-produto"
+                        data-filtro="BEBIDAS_GELADAS"
+                        aria-pressed="false">
 
                         Bebidas geladas
 
@@ -198,7 +221,11 @@
 
                     <!-- PADARIA -->
 
-                    <button type="button" class="filtro-produto" data-filtro="PADARIA_CONFEITARIA" aria-pressed="false">
+                    <button
+                        type="button"
+                        class="filtro-produto"
+                        data-filtro="PADARIA_CONFEITARIA"
+                        aria-pressed="false">
 
                         Padaria e confeitaria
 
@@ -207,7 +234,11 @@
 
                     <!-- LANCHES -->
 
-                    <button type="button" class="filtro-produto" data-filtro="LANCHES_SALGADOS" aria-pressed="false">
+                    <button
+                        type="button"
+                        class="filtro-produto"
+                        data-filtro="LANCHES_SALGADOS"
+                        aria-pressed="false">
 
                         Lanches salgados
 
@@ -216,7 +247,11 @@
 
                     <!-- SOBREMESAS -->
 
-                    <button type="button" class="filtro-produto" data-filtro="SOBREMESAS" aria-pressed="false">
+                    <button
+                        type="button"
+                        class="filtro-produto"
+                        data-filtro="SOBREMESAS"
+                        aria-pressed="false">
 
                         Sobremesas
 
@@ -225,7 +260,11 @@
 
                     <!-- SAUDÁVEIS -->
 
-                    <button type="button" class="filtro-produto" data-filtro="OPCOES_SAUDAVEIS" aria-pressed="false">
+                    <button
+                        type="button"
+                        class="filtro-produto"
+                        data-filtro="OPCOES_SAUDAVEIS"
+                        aria-pressed="false">
 
                         Opções saudáveis
 
@@ -234,7 +273,11 @@
 
                     <!-- PRODUTOS PARA VENDA -->
 
-                    <button type="button" class="filtro-produto" data-filtro="PRODUTOS_VENDA" aria-pressed="false">
+                    <button
+                        type="button"
+                        class="filtro-produto"
+                        data-filtro="PRODUTOS_VENDA"
+                        aria-pressed="false">
 
                         Produtos para venda
 
@@ -249,74 +292,37 @@
             <!-- PRODUTOS -->
             <!-- ================================================= -->
 
-            <section class="produtos-grid" aria-label="Produtos do cardápio">
+            <section
+                class="produtos-grid"
+                id="produtosGrid"
+                aria-label="Produtos do cardápio">
 
 
                 <!-- ================================================= -->
-                <!-- CADA PRODUTO VEM DO BANCO -->
+                <!-- OS PRODUTOS SERÃO INSERIDOS PELO JAVASCRIPT -->
                 <!-- ================================================= -->
 
-                <article class="produto-card produto-item" th:each="produto : ${produtos}"
-                    th:attr="data-categoria=${produto.categoria}">
+                <div class="sem-produtos" id="carregandoProdutos">
 
+                    <h2>
+                        Carregando produtos...
+                    </h2>
 
-                    <!-- IMAGEM -->
+                    <p>
+                        Aguarde enquanto carregamos nosso cardápio.
+                    </p>
 
-                    <img class="produto-imagem" th:src="${produto.imagem}" th:alt="${produto.nome}" loading="lazy">
-
-
-                    <!-- CONTEÚDO -->
-
-                    <div class="produto-conteudo">
-
-
-                        <!-- CATEGORIA -->
-
-                        <span class="produto-categoria" th:text="${produto.categoria}">
-                            CATEGORIA
-                        </span>
-
-
-                        <!-- NOME -->
-
-                        <h2 th:text="${produto.nome}">
-                            Produto
-                        </h2>
-
-
-                        <!-- DESCRIÇÃO -->
-
-                        <p th:text="${produto.descricao}">
-                            Descrição do produto.
-                        </p>
-
-
-                        <!-- PREÇO -->
-
-                        <strong class="produto-preco"
-                            th:text="${'R$ ' + #numbers.formatDecimal(produto.preco, 1, 2).replace('.', ',')}">
-                            R$ 0,00
-                        </strong>
-
-
-                        <!-- PEDIR -->
-
-                        <a class="btn btn-produto" th:href="@{/pedidos}">
-
-                            Pedir agora
-
-                        </a>
-
-                    </div>
-
-                </article>
+                </div>
 
 
                 <!-- ================================================= -->
                 <!-- CASO NÃO EXISTAM PRODUTOS -->
                 <!-- ================================================= -->
 
-                <div class="sem-produtos" th:if="${#lists.isEmpty(produtos)}">
+                <div
+                    class="sem-produtos"
+                    id="semProdutos"
+                    style="display: none;">
 
                     <h2>
                         Nenhum produto cadastrado
@@ -362,9 +368,14 @@
     <!-- BOOTSTRAP -->
     <!-- ===================================================== -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYjR8ZK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
-        </script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYjR8ZK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous">
+    </script>
+
+
+    <!-- JavaScript dos produtos -->
     <script src="./static/js/produtos.js"></script>
 
 </body>
