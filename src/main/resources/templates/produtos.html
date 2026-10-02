@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -16,16 +15,12 @@
     <title>Produtos | Cafeteria Segura</title>
 
     <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-        crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
     <!-- CSS do projeto -->
-    <link rel="stylesheet" href="../static/css/produtos.css">
-    <link rel="stylesheet" href="../static/css/style.css">
-
+    <link rel="stylesheet" href="/css/produtos.css">
+    <link rel="stylesheet" href="/css/style.css">       
 </head>
 
 
@@ -41,7 +36,7 @@
 
             <div class="container">
 
-                <a class="navbar-brand" href="./index.html">
+                <a class="navbar-brand" href="/index.html">
 
                     <span class="navbar-brand-mark">☕</span>
 
@@ -59,7 +54,7 @@
 
                         <li class="nav-item">
 
-                            <a class="nav-link" href="../index.html">
+                            <a class="nav-link" href="/index.html">
 
                                 Home
 
@@ -70,10 +65,7 @@
 
                         <li class="nav-item">
 
-                            <a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="./produtos.html">
+                            <a class="nav-link active" aria-current="page" href="/produtos.html">
 
                                 Produtos
 
@@ -84,7 +76,7 @@
 
                         <li class="nav-item">
 
-                            <a class="nav-link" href="./pedidos.html">
+                            <a class="nav-link" href="/pedidos.html">
 
                                 Pedidos
 
@@ -175,18 +167,12 @@
 
                 <!-- FILTROS -->
 
-                <div
-                    class="filtros-produtos"
-                    aria-label="Filtro de produtos">
+                <div class="filtros-produtos" aria-label="Filtro de produtos">
 
 
                     <!-- TODOS -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto ativo"
-                        data-filtro="todos"
-                        aria-pressed="true">
+                    <button type="button" class="filtro-produto ativo" data-filtro="todos" aria-pressed="true">
 
                         Todos
 
@@ -195,11 +181,7 @@
 
                     <!-- BEBIDAS QUENTES -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto"
-                        data-filtro="BEBIDAS_QUENTES"
-                        aria-pressed="false">
+                    <button type="button" class="filtro-produto" data-filtro="BEBIDAS_QUENTES" aria-pressed="false">
 
                         Bebidas quentes
 
@@ -208,11 +190,7 @@
 
                     <!-- BEBIDAS GELADAS -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto"
-                        data-filtro="BEBIDAS_GELADAS"
-                        aria-pressed="false">
+                    <button type="button" class="filtro-produto" data-filtro="BEBIDAS_GELADAS" aria-pressed="false">
 
                         Bebidas geladas
 
@@ -221,11 +199,7 @@
 
                     <!-- PADARIA -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto"
-                        data-filtro="PADARIA_CONFEITARIA"
-                        aria-pressed="false">
+                    <button type="button" class="filtro-produto" data-filtro="PADARIA_CONFEITARIA" aria-pressed="false">
 
                         Padaria e confeitaria
 
@@ -234,11 +208,7 @@
 
                     <!-- LANCHES -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto"
-                        data-filtro="LANCHES_SALGADOS"
-                        aria-pressed="false">
+                    <button type="button" class="filtro-produto" data-filtro="LANCHES_SALGADOS" aria-pressed="false">
 
                         Lanches salgados
 
@@ -247,11 +217,7 @@
 
                     <!-- SOBREMESAS -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto"
-                        data-filtro="SOBREMESAS"
-                        aria-pressed="false">
+                    <button type="button" class="filtro-produto" data-filtro="SOBREMESAS" aria-pressed="false">
 
                         Sobremesas
 
@@ -260,11 +226,7 @@
 
                     <!-- SAUDÁVEIS -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto"
-                        data-filtro="OPCOES_SAUDAVEIS"
-                        aria-pressed="false">
+                    <button type="button" class="filtro-produto" data-filtro="OPCOES_SAUDAVEIS" aria-pressed="false">
 
                         Opções saudáveis
 
@@ -273,11 +235,7 @@
 
                     <!-- PRODUTOS PARA VENDA -->
 
-                    <button
-                        type="button"
-                        class="filtro-produto"
-                        data-filtro="PRODUTOS_VENDA"
-                        aria-pressed="false">
+                    <button type="button" class="filtro-produto" data-filtro="PRODUTOS_VENDA" aria-pressed="false">
 
                         Produtos para venda
 
@@ -292,10 +250,7 @@
             <!-- PRODUTOS -->
             <!-- ================================================= -->
 
-            <section
-                class="produtos-grid"
-                id="produtosGrid"
-                aria-label="Produtos do cardápio">
+            <section class="produtos-grid" id="produtosGrid" aria-label="Produtos do cardápio">
 
 
                 <!-- ================================================= -->
@@ -319,10 +274,7 @@
                 <!-- CASO NÃO EXISTAM PRODUTOS -->
                 <!-- ================================================= -->
 
-                <div
-                    class="sem-produtos"
-                    id="semProdutos"
-                    style="display: none;">
+                <div class="sem-produtos" id="semProdutos" style="display: none;">
 
                     <h2>
                         Nenhum produto cadastrado
@@ -368,11 +320,9 @@
     <!-- BOOTSTRAP -->
     <!-- ===================================================== -->
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYjR8ZK/BmnVDxM+D2scQbITxI"
-        crossorigin="anonymous">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYjR8ZK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
 
 
     <!-- JavaScript dos produtos -->
