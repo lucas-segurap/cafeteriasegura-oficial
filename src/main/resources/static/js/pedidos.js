@@ -1,305 +1,506 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('formPedido');
-    if (!form) return;
-
-    const checkboxes = Array.from(form.querySelectorAll('.produto-selecao'));
-    const listaResumo = document.getElementById('listaResumo');
-    const valorSubtotal = document.getElementById('valorSubtotal');
-    const valorTotal = document.getElementById('valorTotal');
-    const mensagem = document.getElementById('mensagemConfirmacao');
-    const botaoEnviar = form.querySelector('.order-submit');
-
-    const formatarPreco = (valor) =>
-        valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-    function itensSelecionados() {
-        return checkboxes
-            .filter((chk) => chk.checked)
-            .map((chk) => {
-                const card = chk.closest('.produto-checkbox');
-                const qtdInput = card.querySelector('.quantidade-produto');
-                const quantidade = Math.max(1, parseInt(qtdInput.value, 10) || 1);
-                const preco = parseFloat(chk.dataset.preco);
-
-                return {
-                    valor: chk.value,
-                    nome: chk.dataset.nome,
-                    quantidade,
-                    preco,
-                    subtotal: preco * quantidade,
-                };
-            });
-    }
-
-    function atualizarResumo() {
-        const itens = itensSelecionados();
-
-        if (itens.length === 0) {
-            listaResumo.innerHTML = `
-                <div class="summary-empty">
-                    <span>☕</span>
-                    <p>Seu pedido está vazio.</p>
-                    <small>Escolha um produto para começar.</small>
-                </div>`;
-            valorSubtotal.textContent = formatarPreco(0);
-            valorTotal.textContent = formatarPreco(0);
-            botaoEnviar.disabled = true;
-            return;
-        }
-
-        listaResumo.innerHTML = itens
-            .map(
-                (item) => `
-                <div class="summary-item">
-                    <div>
-                        <strong>${item.nome}</strong>
-                        <small>${item.quantidade}x ${formatarPreco(item.preco)}</small>
-                    </div>
-                    <div class="summary-item-actions">
-                        <span>${formatarPreco(item.subtotal)}</span>
-                        <button type="button" class="btn-remover-item" data-remover="${item.valor}"
-                            aria-label="Remover ${item.nome} do pedido">&times;</button>
-                    </div>
-                </div>`
-            )
-            .join('');
-
-        const subtotal = itens.reduce((soma, item) => soma + item.subtotal, 0);
-        valorSubtotal.textContent = formatarPreco(subtotal);
-        valorTotal.textContent = formatarPreco(subtotal);
-        botaoEnviar.disabled = false;
-
-        listaResumo.querySelectorAll('[data-remover]').forEach((botao) => {
-            botao.addEventListener('click', () => {
-                const chk = checkboxes.find((c) => c.value === botao.dataset.remover);
-                if (!chk) return;
-                chk.checked = false;
-                chk.dispatchEvent(new Event('change'));
-            });
-        });
-    }
-
-    checkboxes.forEach((chk) => {
-        chk.addEventListener('change', () => {
-            const card = chk.closest('.produto-checkbox');
-            const qtdInput = card.querySelector('.quantidade-produto');
-            qtdInput.disabled = !chk.checked;
-
-            if (chk.checked) {
-                qtdInput.value = qtdInput.value || 1;
-                qtdInput.focus();
-            }
-
-            atualizarResumo();
-        });
-    });
-
-    form.querySelectorAll('.quantidade-produto').forEach((input) => {
-        input.addEventListener('input', () => {
-            let valor = parseInt(input.value, 10);
-            if (Number.isNaN(valor) || valor < 1) valor = 1;
-            if (valor > 10) valor = 10;
-            input.value = valor;
-            atualizarResumo();
-        });
-
-        input.addEventListener('click', (evento) => evento.stopPropagation());
-    });
-
-    form.addEventListener('submit', (evento) => {
-        evento.preventDefault();
-
-        const itens = itensSelecionados();
-        mensagem.classList.remove('mensagem-sucesso', 'mensagem-erro');
-
-        if (itens.length === 0) {
-            mensagem.textContent = 'Selecione ao menos um produto antes de confirmar.';
-            mensagem.classList.add('mensagem-erro');
-            mensagem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            return;
-        }
-
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-
-        botaoEnviar.disabled = true;
-        botaoEnviar.classList.add('is-loading');
-        botaoEnviar.textContent = 'Enviando...';
-
-        // Simulação local do envio. Troque este bloco pela chamada real
-        // ao backend (fetch/AJAX) quando o endpoint estiver pronto.
-        window.setTimeout(() => {
-            mensagem.textContent = 'Pedido confirmado! Em breve entraremos em contato para combinar a entrega.';
-            mensagem.classList.add('mensagem-sucesso');
-
-            form.reset();
-            checkboxes.forEach((chk) => {
-                chk.closest('.produto-checkbox').querySelector('.quantidade-produto').disabled = true;
-            });
-
-            botaoEnviar.classList.remove('is-loading');
-            botaoEnviar.textContent = 'Confirmar pedido';
-
-            atualizarResumo();
-            mensagem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 900);
-    });
-
-    atualizarResumo();
-});
-
 document.addEventListener("DOMContentLoaded", function () {
 
-    const produtos = document.querySelectorAll(".produto-selecao");
+```
+const formPedido = document.getElementById("formPedido");
+const produtosPedido = document.getElementById("produtosPedido");
+const listaResumo = document.getElementById("listaResumo");
+const valorSubtotal = document.getElementById("valorSubtotal");
+const valorTotal = document.getElementById("valorTotal");
+const btnConfirmar = document.getElementById("btnConfirmarPedido");
+const mensagem = document.getElementById("mensagemConfirmacao");
 
-    function atualizarResumo() {
+const campoMesa = document.getElementById("campoMesa");
+const campoEntrega = document.getElementById("campoEntrega");
 
-        let subtotal = 0;
-        let quantidadeTotal = 0;
+const numeroMesa = document.getElementById("numeroMesa");
+const enderecoEntrega = document.getElementById("enderecoEntrega");
 
-        produtos.forEach(function (produto) {
+let pedido = JSON.parse(localStorage.getItem("pedido")) || [];
 
-            const quantidadeInput =
-                produto.closest(".produto-checkbox")
-                    .querySelector(".quantidade-produto");
 
-            if (produto.checked) {
+// =====================================================
+// FORMATAR PREÇO
+// =====================================================
 
-                quantidadeInput.disabled = false;
+function formatarPreco(valor) {
+    return Number(valor).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
 
-                let quantidade = parseInt(quantidadeInput.value) || 1;
 
-                if (quantidade < 1) {
-                    quantidade = 1;
-                    quantidadeInput.value = 1;
-                }
+// =====================================================
+// SALVAR PEDIDO
+// =====================================================
 
-                if (quantidade > 10) {
-                    quantidade = 10;
-                    quantidadeInput.value = 10;
-                }
+function salvarPedido() {
+    localStorage.setItem("pedido", JSON.stringify(pedido));
+}
 
-                const preco = parseFloat(produto.dataset.preco);
 
-                subtotal += preco * quantidade;
-                quantidadeTotal += quantidade;
+// =====================================================
+// RENDERIZAR PRODUTOS
+// =====================================================
 
-            } else {
+function renderizarProdutos() {
 
-                quantidadeInput.disabled = true;
-                quantidadeInput.value = 1;
-            }
-        });
-
-        const subtotalElemento =
-            document.getElementById("subtotal");
-
-        const totalElemento =
-            document.getElementById("total");
-
-        if (subtotalElemento) {
-            subtotalElemento.textContent =
-                "R$ " + subtotal.toFixed(2).replace(".", ",");
-        }
-
-        if (totalElemento) {
-            totalElemento.textContent =
-                "R$ " + subtotal.toFixed(2).replace(".", ",");
-        }
+    if (!produtosPedido) {
+        return;
     }
 
+    if (pedido.length === 0) {
 
-    produtos.forEach(function (produto) {
+        produtosPedido.innerHTML = `
+          
+        `;
 
-        produto.addEventListener("change", atualizarResumo);
+        return;
+    }
 
-        const quantidadeInput =
-            produto.closest(".produto-checkbox")
-                .querySelector(".quantidade-produto");
+    produtosPedido.innerHTML = "";
 
-        quantidadeInput.addEventListener(
-            "input",
-            atualizarResumo
-        );
+    pedido.forEach(function (produto, index) {
+
+        const card = document.createElement("div");
+
+        card.className = "produto-pedido-item";
+
+        card.innerHTML = `
+            
+
+            
+
+        
+        `;
+
+        produtosPedido.appendChild(card);
+    });
+
+    adicionarEventosQuantidade();
+}
+
+
+// =====================================================
+// BOTÕES DE QUANTIDADE
+// =====================================================
+
+function adicionarEventosQuantidade() {
+
+    const botoesQuantidade =
+        document.querySelectorAll(".btn-quantidade");
+
+    botoesQuantidade.forEach(function (botao) {
+
+        botao.addEventListener("click", function () {
+
+            const index = Number(botao.dataset.index);
+            const acao = botao.dataset.acao;
+
+            if (!pedido[index]) {
+                return;
+            }
+
+            if (acao === "aumentar") {
+
+                if (pedido[index].quantidade < 10) {
+                    pedido[index].quantidade++;
+                }
+
+            }
+
+            if (acao === "diminuir") {
+
+                pedido[index].quantidade--;
+
+                if (pedido[index].quantidade <= 0) {
+                    pedido.splice(index, 1);
+                }
+            }
+
+            salvarPedido();
+            atualizarTela();
+        });
     });
 
 
-    atualizarResumo();
-});
+    const botoesRemover =
+        document.querySelectorAll(".btn-remover");
+
+    botoesRemover.forEach(function (botao) {
+
+        botao.addEventListener("click", function () {
+
+            const index = Number(botao.dataset.index);
+
+            pedido.splice(index, 1);
+
+            salvarPedido();
+            atualizarTela();
+        });
+    });
+}
 
 
-document.addEventListener("DOMContentLoaded", function () {
+// =====================================================
+// ATUALIZAR RESUMO
+// =====================================================
 
-    const opcoesAtendimento =
-        document.querySelectorAll(
-            'input[name="tipoAtendimento"]'
+function atualizarResumo() {
+
+    if (!listaResumo) {
+        return;
+    }
+
+    listaResumo.innerHTML = "";
+
+    let subtotal = 0;
+
+    if (pedido.length === 0) {
+
+        listaResumo.innerHTML = `
+         
+        `;
+
+    } else {
+
+        pedido.forEach(function (produto) {
+
+            const valorProduto =
+                Number(produto.preco) *
+                Number(produto.quantidade);
+
+            subtotal += valorProduto;
+
+            const item =
+                document.createElement("div");
+
+            item.className = "summary-item";
+
+            item.innerHTML = `
+                
+            `;
+
+            listaResumo.appendChild(item);
+        });
+    }
+
+    if (valorSubtotal) {
+        valorSubtotal.textContent =
+            formatarPreco(subtotal);
+    }
+
+    if (valorTotal) {
+        valorTotal.textContent =
+            formatarPreco(subtotal);
+    }
+}
+
+
+// =====================================================
+// TIPO DE ATENDIMENTO
+// =====================================================
+
+const opcoesAtendimento =
+    document.querySelectorAll(
+        'input[name="tipoAtendimento"]'
+    );
+
+
+function atualizarAtendimento() {
+
+    const selecionado =
+        document.querySelector(
+            'input[name="tipoAtendimento"]:checked'
         );
 
-    const campoMesa =
-        document.getElementById("campoMesa");
 
-    const campoEntrega =
-        document.getElementById("campoEntrega");
-
-    const numeroMesa =
-        document.getElementById("numeroMesa");
-
-    const enderecoEntrega =
-        document.getElementById("enderecoEntrega");
-
-
-    function atualizarAtendimento() {
-
-        const selecionado =
-            document.querySelector(
-                'input[name="tipoAtendimento"]:checked'
-            );
-
-
+    if (campoMesa) {
         campoMesa.style.display = "none";
+    }
+
+    if (campoEntrega) {
         campoEntrega.style.display = "none";
-
-
-        numeroMesa.required = false;
-        enderecoEntrega.required = false;
-
-
-        if (!selecionado) {
-            return;
-        }
-
-
-        if (selecionado.value === "MESA") {
-
-            campoMesa.style.display = "block";
-
-            numeroMesa.required = true;
-
-        }
-
-
-        if (selecionado.value === "ENTREGA") {
-
-            campoEntrega.style.display = "block";
-
-            enderecoEntrega.required = true;
-
-        }
-
     }
 
 
-    opcoesAtendimento.forEach(function (opcao) {
+    if (numeroMesa) {
+        numeroMesa.required = false;
+    }
 
-        opcao.addEventListener(
-            "change",
-            atualizarAtendimento
-        );
+    if (enderecoEntrega) {
+        enderecoEntrega.required = false;
+    }
 
-    });
+
+    if (!selecionado) {
+        atualizarBotaoConfirmar();
+        return;
+    }
+
+
+    if (selecionado.value === "MESA") {
+
+        if (campoMesa) {
+            campoMesa.style.display = "block";
+        }
+
+        if (numeroMesa) {
+            numeroMesa.required = true;
+        }
+    }
+
+
+    if (selecionado.value === "ENTREGA") {
+
+        if (campoEntrega) {
+            campoEntrega.style.display = "block";
+        }
+
+        if (enderecoEntrega) {
+            enderecoEntrega.required = true;
+        }
+    }
+
+    atualizarBotaoConfirmar();
+}
+
+
+opcoesAtendimento.forEach(function (opcao) {
+
+    opcao.addEventListener(
+        "change",
+        atualizarAtendimento
+    );
 
 });
 
 
+// =====================================================
+// HABILITAR / DESABILITAR BOTÃO
+// =====================================================
+
+function atualizarBotaoConfirmar() {
+
+    if (!btnConfirmar) {
+        return;
+    }
+
+    const selecionado =
+        document.querySelector(
+            'input[name="tipoAtendimento"]:checked'
+        );
+
+    let valido = pedido.length > 0;
+
+
+    if (!selecionado) {
+        valido = false;
+    }
+
+
+    if (
+        selecionado &&
+        selecionado.value === "MESA"
+    ) {
+
+        if (
+            !numeroMesa ||
+            numeroMesa.value === ""
+        ) {
+            valido = false;
+        }
+    }
+
+
+    if (
+        selecionado &&
+        selecionado.value === "ENTREGA"
+    ) {
+
+        if (
+            !enderecoEntrega ||
+            enderecoEntrega.value.trim() === ""
+        ) {
+            valido = false;
+        }
+    }
+
+
+    btnConfirmar.disabled = !valido;
+}
+
+
+// =====================================================
+// EVENTOS DOS CAMPOS
+// =====================================================
+
+if (numeroMesa) {
+
+    numeroMesa.addEventListener(
+        "change",
+        atualizarBotaoConfirmar
+    );
+
+}
+
+
+if (enderecoEntrega) {
+
+    enderecoEntrega.addEventListener(
+        "input",
+        atualizarBotaoConfirmar
+    );
+
+}
+
+
+// =====================================================
+// ENVIAR PEDIDO
+// =====================================================
+
+if (formPedido) {
+
+    formPedido.addEventListener(
+        "submit",
+        function (evento) {
+
+            if (pedido.length === 0) {
+
+                evento.preventDefault();
+
+                mostrarMensagem(
+                    "Selecione pelo menos um produto.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            const selecionado =
+                document.querySelector(
+                    'input[name="tipoAtendimento"]:checked'
+                );
+
+
+            if (!selecionado) {
+
+                evento.preventDefault();
+
+                mostrarMensagem(
+                    "Selecione o tipo de atendimento.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            if (
+                selecionado.value === "MESA" &&
+                (
+                    !numeroMesa ||
+                    numeroMesa.value === ""
+                )
+            ) {
+
+                evento.preventDefault();
+
+                mostrarMensagem(
+                    "Selecione o número da mesa.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            if (
+                selecionado.value === "ENTREGA" &&
+                (
+                    !enderecoEntrega ||
+                    enderecoEntrega.value.trim() === ""
+                )
+            ) {
+
+                evento.preventDefault();
+
+                mostrarMensagem(
+                    "Digite o endereço para entrega.",
+                    "erro"
+                );
+
+                return;
+            }
+
+
+            // Remove campos antigos
+            document
+                .querySelectorAll(".produto-hidden")
+                .forEach(function (campo) {
+                    campo.remove();
+                });
+
+
+            
+// =====================================================
+// MENSAGEM
+// =====================================================
+
+function mostrarMensagem(texto, tipo) {
+
+    if (!mensagem) {
+        return;
+    }
+
+    mensagem.textContent = texto;
+
+    mensagem.classList.remove(
+        "mensagem-sucesso",
+        "mensagem-erro"
+    );
+
+
+    if (tipo === "sucesso") {
+
+        mensagem.classList.add(
+            "mensagem-sucesso"
+        );
+
+    } else {
+
+        mensagem.classList.add(
+            "mensagem-erro"
+        );
+    }
+
+
+    mensagem.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+    });
+}
+
+
+// =====================================================
+// ATUALIZAR TELA
+// =====================================================
+
+function atualizarTela() {
+
+    renderizarProdutos();
+    atualizarResumo();
+    atualizarBotaoConfirmar();
+}
+
+
+// =====================================================
+// INICIALIZAÇÃO
+// =====================================================
+
+atualizarAtendimento();
+atualizarTela();
+```
+
+});
