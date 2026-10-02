@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Conheça os produtos da Cafeteria Segura. Bebidas, padaria, lanches, sobremesas e opções saudáveis.">
+
+    <meta name="author" content="Lucas Segura">
+
+    <title>Produtos | Cafeteria Segura</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <!-- CSS do projeto -->
+    <link rel="stylesheet" href="../static/css/produtos.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+
+</head>
+
+
+<body>
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
+
+    <header class="site-header">
+
+        <nav class="navbar navbar-expand-lg navbar-dark">
+
+            <div class="container">
+
+                <a class="navbar-brand" href="./index.html">
+
+                    <span class="navbar-brand-mark">☕</span>
+
+                    Cafeteria Segura
+
+                </a>
+                <!-- MENU -->
+
+                <div class="collapse navbar-collapse" id="menuPrincipal">
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link" th:href="@{/}">
+
+                                Home
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link active" aria-current="page" th:href="@{/produtos}">
+
+                                Produtos
+
+                            </a>
+
+                        </li>
+
+
+                        <li class="nav-item">
+
+                            <a class="nav-link" th:href="@{/pedidos}">
+
+                                Pedidos
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN -->
+    <!-- ===================================================== -->
+
+    <main class="pagina-produtos">
+
+        <div class="container">
+
+
+            <!-- ================================================= -->
+            <!-- HERO -->
+            <!-- ================================================= -->
+
+            <section class="produtos-hero">
+
+                <div class="produtos-hero-conteudo">
+
+                    <span class="produtos-eyebrow">
+                        CAFETERIA SEGURA
+                    </span>
+
+
+                    <h1>
+                        Escolha seu próximo momento favorito
+                    </h1>
+
+
+                    <p>
+                        Explore nosso cardápio e encontre bebidas,
+                        produtos de padaria, lanches, sobremesas
+                        e opções saudáveis preparados para você.
+                    </p>
+
+                </div>
+
+
+                <div class="produtos-hero-selo" aria-hidden="true">
+
+                    <span>☕</span>
+
+                    <small>
+                        feito para<br>
+                        você
+                    </small>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================================================= -->
+            <!-- CONTROLES -->
+            <!-- ================================================= -->
+
+            <div class="produtos-controles">
+
+
+                <!-- CONTADOR -->
+
+                <div class="produtos-contador">
+
+                    <strong th:text="${#lists.size(produtos)}">
+                        0
+                    </strong>
+
+                    opções no cardápio
+
+                </div>
+
+
+                <!-- FILTROS -->
+
+                <div class="filtros-produtos" aria-label="Filtro de produtos">
+
+
+                    <!-- TODOS -->
+
+                    <button type="button" class="filtro-produto ativo" data-filtro="todos" aria-pressed="true">
+
+                        Todos
+
+                    </button>
+
+
+                    <!-- BEBIDAS QUENTES -->
+
+                    <button type="button" class="filtro-produto" data-filtro="BEBIDAS_QUENTES" aria-pressed="false">
+
+                        Bebidas quentes
+
+                    </button>
+
+
+                    <!-- BEBIDAS GELADAS -->
+
+                    <button type="button" class="filtro-produto" data-filtro="BEBIDAS_GELADAS" aria-pressed="false">
+
+                        Bebidas geladas
+
+                    </button>
+
+
+                    <!-- PADARIA -->
+
+                    <button type="button" class="filtro-produto" data-filtro="PADARIA_CONFEITARIA" aria-pressed="false">
+
+                        Padaria e confeitaria
+
+                    </button>
+
+
+                    <!-- LANCHES -->
+
+                    <button type="button" class="filtro-produto" data-filtro="LANCHES_SALGADOS" aria-pressed="false">
+
+                        Lanches salgados
+
+                    </button>
+
+
+                    <!-- SOBREMESAS -->
+
+                    <button type="button" class="filtro-produto" data-filtro="SOBREMESAS" aria-pressed="false">
+
+                        Sobremesas
+
+                    </button>
+
+
+                    <!-- SAUDÁVEIS -->
+
+                    <button type="button" class="filtro-produto" data-filtro="OPCOES_SAUDAVEIS" aria-pressed="false">
+
+                        Opções saudáveis
+
+                    </button>
+
+
+                    <!-- PRODUTOS PARA VENDA -->
+
+                    <button type="button" class="filtro-produto" data-filtro="PRODUTOS_VENDA" aria-pressed="false">
+
+                        Produtos para venda
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- PRODUTOS -->
+            <!-- ================================================= -->
+
+            <section class="produtos-grid" aria-label="Produtos do cardápio">
+
+
+                <!-- ================================================= -->
+                <!-- CADA PRODUTO VEM DO BANCO -->
+                <!-- ================================================= -->
+
+                <article class="produto-card produto-item" th:each="produto : ${produtos}"
+                    th:attr="data-categoria=${produto.categoria}">
+
+
+                    <!-- IMAGEM -->
+
+                    <img class="produto-imagem" th:src="${produto.imagem}" th:alt="${produto.nome}" loading="lazy">
+
+
+                    <!-- CONTEÚDO -->
+
+                    <div class="produto-conteudo">
+
+
+                        <!-- CATEGORIA -->
+
+                        <span class="produto-categoria" th:text="${produto.categoria}">
+                            CATEGORIA
+                        </span>
+
+
+                        <!-- NOME -->
+
+                        <h2 th:text="${produto.nome}">
+                            Produto
+                        </h2>
+
+
+                        <!-- DESCRIÇÃO -->
+
+                        <p th:text="${produto.descricao}">
+                            Descrição do produto.
+                        </p>
+
+
+                        <!-- PREÇO -->
+
+                        <strong class="produto-preco"
+                            th:text="${'R$ ' + #numbers.formatDecimal(produto.preco, 1, 2).replace('.', ',')}">
+                            R$ 0,00
+                        </strong>
+
+
+                        <!-- PEDIR -->
+
+                        <a class="btn btn-produto" th:href="@{/pedidos}">
+
+                            Pedir agora
+
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- ================================================= -->
+                <!-- CASO NÃO EXISTAM PRODUTOS -->
+                <!-- ================================================= -->
+
+                <div class="sem-produtos" th:if="${#lists.isEmpty(produtos)}">
+
+                    <h2>
+                        Nenhum produto cadastrado
+                    </h2>
+
+                    <p>
+                        No momento não existem produtos disponíveis
+                        no cardápio.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- ===================================================== -->
+    <!-- FOOTER -->
+    <!-- ===================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container site-footer-inner">
+
+            <strong>
+                ☕ Cafeteria Segura
+            </strong>
+
+            <small>
+                &copy; 2026 Cafeteria Segura.
+                Todos os direitos reservados.
+            </small>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ===================================================== -->
+    <!-- BOOTSTRAP -->
+    <!-- ===================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYjR8ZK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
+    <script src="/src/main/resources/static/js/produtos.js"></script>
+
+</body>
+
+</html>
