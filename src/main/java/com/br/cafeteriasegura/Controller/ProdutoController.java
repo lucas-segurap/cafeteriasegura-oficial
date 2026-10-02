@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/produtos")
-@CrossOrigin
 public class ProdutoController {
 
     private final ProdutoService produtoService;
@@ -18,12 +17,37 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    // GET /api/produtos
     @GetMapping
     public ResponseEntity<List<Produto>> listar() {
-
         return ResponseEntity.ok(
                 produtoService.listarTodos()
         );
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Produto> buscar(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                produtoService.buscarPorId(id)
+        );
+    }
+
+    @PostMapping
+    public ResponseEntity<Produto> cadastrar(
+            @RequestBody Produto produto) {
+
+        return ResponseEntity.ok(
+                produtoService.salvar(produto)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(
+            @PathVariable Long id) {
+
+        produtoService.excluir(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
